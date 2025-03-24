@@ -19,7 +19,7 @@ const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data, units, onToggleUn
         <div>
           <h2 className="text-3xl font-bold">{data.name}, {data.sys.country}</h2>
           <p className="text-gray-600">
-            {formatDate(data.dt, data.timezone)}
+            {formatDate(data.dt, 'full', data.timezone)}
           </p>
         </div>
         <button
@@ -71,7 +71,7 @@ const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data, units, onToggleUn
           <Sunrise className="text-orange-500 mr-2" size={20} />
           <div>
             <p className="text-sm text-gray-600">Bình minh</p>
-            <p className="font-semibold">{formatDate(data.sys.sunrise, data.timezone, 'time')}</p>
+            <p className="font-semibold">{formatDate(data.sys.sunrise, 'time', data.timezone)}</p>
           </div>
         </div>
         
@@ -79,7 +79,7 @@ const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data, units, onToggleUn
           <Sunset className="text-orange-500 mr-2" size={20} />
           <div>
             <p className="text-sm text-gray-600">Hoàng hôn</p>
-            <p className="font-semibold">{formatDate(data.sys.sunset, data.timezone, 'time')}</p>
+            <p className="font-semibold">{formatDate(data.sys.sunset, 'time', data.timezone)}</p>
           </div>
         </div>
         

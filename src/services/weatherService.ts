@@ -13,7 +13,7 @@ interface Alert {
   description: string;
 }
 
-const API_KEY = '9713fcfb3e8224bf42a0e8c75e19e705';
+const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
 const BASE_URL = 'https://api.openweathermap.org';
 
 export const getWeatherByCoordinates = async (lat: number, lon: number, units = 'metric'): Promise<WeatherData> => {
@@ -166,27 +166,35 @@ export const getWeatherIcon = (iconCode: string): string => {
   return `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
 };
 
-export const formatDate = (timestamp: number, timezone: number, format: 'full' | 'day' | 'time' | 'date' = 'full'): string => {
-  // Thêm offset cho múi giờ Việt Nam (GMT+7)
-  const vietnamOffset = 25200; // 7 * 3600 seconds
-  const date = new Date((timestamp + vietnamOffset) * 1000);
+export const formatDate = (timestamp: number, format: 'full' | 'day' | 'time' | 'date' = 'full', timezoneOffset?: number): string => {
+  // Sử dụng timezone từ API nếu có, nếu không sẽ dùng GMT+7 cho Việt Nam
+  const offset = timezoneOffset !== undefined ? timezoneOffset : 25200; // 7 * 3600 seconds
+  const date = new Date((timestamp + offset) * 1000);
+  
+  const options: Intl.DateTimeFormatOptions = {
+    timeZone: 'UTC', // Sử dụng UTC vì chúng ta đã thêm offset thủ công
+    hour12: false // Sử dụng định dạng 24 giờ
+  };
   
   if (format === 'day') {
-    return new Intl.DateTimeFormat('vi-VN', { weekday: 'long' }).format(date);
+    options.weekday = 'long';
   } else if (format === 'time') {
-    return new Intl.DateTimeFormat('vi-VN', { hour: '2-digit', minute: '2-digit' }).format(date);
+    options.hour = '2-digit';
+    options.minute = '2-digit';
   } else if (format === 'date') {
-    return new Intl.DateTimeFormat('vi-VN', { day: 'numeric', month: 'numeric' }).format(date);
+    options.day = 'numeric';
+    options.month = 'numeric';
+  } else {
+    // Format đầy đủ
+    options.weekday = 'long';
+    options.year = 'numeric';
+    options.month = 'long';
+    options.day = 'numeric';
+    options.hour = '2-digit';
+    options.minute = '2-digit';
   }
   
-  return new Intl.DateTimeFormat('vi-VN', { 
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  }).format(date);
+  return new Intl.DateTimeFormat('vi-VN', options).format(date);
 };
 
 export const kelvinToCelsius = (kelvin: number): number => {

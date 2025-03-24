@@ -50,7 +50,7 @@ const WeatherAlerts: React.FC<WeatherAlertsProps> = ({ data }) => {
               <div className="font-medium text-red-700">{alert.event}</div>
               <div className="flex items-center">
                 <span className="text-sm text-red-600 mr-4">
-                  {formatDate(alert.start, data.timezone_offset, 'date')} - {formatDate(alert.end, data.timezone_offset, 'date')}
+                  {formatDate(alert.start, 'date')} - {formatDate(alert.end, 'date')}
                 </span>
                 <button 
                   onClick={(e) => {

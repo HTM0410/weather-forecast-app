@@ -20,11 +20,8 @@ const DailyForecast: React.FC<DailyForecastProps> = ({ data, units }) => {
       <div className="space-y-4">
         {dailyData.map((day) => {
           // Format the date as day of week and calendar date
-          const dayOfWeek = formatDate(day.dt, data.timezone_offset, 'day');
-          const calendarDate = new Date((day.dt + data.timezone_offset) * 1000).toLocaleDateString('vi-VN', {
-            day: 'numeric',
-            month: 'numeric'
-          });
+          const dayOfWeek = formatDate(day.dt, 'day', data.timezone_offset);
+          const calendarDate = formatDate(day.dt, 'date', data.timezone_offset);
           
           return (
             <div key={day.dt} className="flex items-center justify-between border-b border-gray-200 pb-3 last:border-0">

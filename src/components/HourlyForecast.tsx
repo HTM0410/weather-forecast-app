@@ -44,7 +44,7 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({ data, units }) => {
         >
           {hourlyData.map((hour) => (
             <div key={hour.dt} className="flex flex-col items-center min-w-[80px]">
-              <p className="text-sm font-medium">{formatDate(hour.dt, data.timezone_offset, 'time')}</p>
+              <p className="text-sm font-medium">{formatDate(hour.dt, 'time')}</p>
               <img 
                 src={getWeatherIcon(hour.weather[0].icon)} 
                 alt={hour.weather[0].description}

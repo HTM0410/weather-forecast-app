@@ -30,6 +30,7 @@ function App() {
     name: null,
   });
   const [backgroundImage, setBackgroundImage] = useState<string>('https://images.unsplash.com/photo-1534088568595-a066f410bcda?q=80&w=1951&auto=format&fit=crop');
+  const [isImageLoading, setIsImageLoading] = useState(false);
 
   const { loading: geoLoading, error: geoError, position, permissionDenied } = useGeolocation();
   
@@ -60,8 +61,18 @@ function App() {
     if (currentWeather) {
       const isDay = currentWeather.dt > currentWeather.sys.sunrise && currentWeather.dt < currentWeather.sys.sunset;
       const newBackground = getWeatherBackground(currentWeather.weather[0].id, isDay);
-      console.log('Weather ID:', currentWeather.weather[0].id, 'Is Day:', isDay, 'New Background:', newBackground);
-      setBackgroundImage(newBackground);
+      
+      if (newBackground !== backgroundImage) {
+        setIsImageLoading(true);
+        const img = new Image();
+        img.src = newBackground;
+        img.onload = () => {
+          setBackgroundImage(newBackground);
+          setTimeout(() => {
+            setIsImageLoading(false);
+          }, 50);
+        };
+      }
     }
   }, [currentWeather]);
 
@@ -99,11 +110,19 @@ function App() {
   console.log('Current background image:', backgroundImage);
 
   return (
-    <div 
-      className="min-h-screen bg-cover bg-center bg-no-repeat flex flex-col transition-all duration-1000"
-      style={{ backgroundImage: `url("${backgroundImage}")` }}
-    >
-      <div className="bg-gradient-to-b from-black/50 to-black/30 min-h-screen py-8 px-4">
+    <div className="min-h-screen w-full relative">
+      <div
+        key={backgroundImage}
+        className={`absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed ${isImageLoading ? 'opacity-0' : 'opacity-100'}`}
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          transition: 'opacity 1s ease-in-out'
+        }}
+      />
+      <div 
+        className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/30"
+      />
+      <div className="relative z-10 min-h-screen py-8 px-4">
         <header className="max-w-2xl mx-auto mb-8">
           <div className="flex items-center justify-center mb-6">
             <Cloud className="text-white mr-2" size={32} />
