@@ -47,7 +47,7 @@ npm run dev
 
 ## Triển khai
 
-Ứng dụng được triển khai trên Netlify: [Link to your app]
+Ứng dụng được triển khai trên Netlify: [[Link to your app]](https://truongminhhoang.netlify.app/)
 
 ## Đóng góp
 
