@@ -1,3 +1,12 @@
+export interface WeatherAlert {
+  sender_name: string;
+  event: string;
+  start: number;
+  end: number;
+  description: string;
+  tags?: string[];
+}
+
 export interface WeatherData {
   coord: {
     lon: number;
@@ -213,14 +222,7 @@ export interface OneCallData {
     snow?: number;
     uvi: number;
   }[];
-  alerts?: {
-    sender_name: string;
-    event: string;
-    start: number;
-    end: number;
-    description: string;
-    tags: string[];
-  }[];
+  alerts?: WeatherAlert[];
 }
 
 export interface GeocodingData {

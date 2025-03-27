@@ -7,7 +7,7 @@ import SearchBar from './components/SearchBar';
 import CurrentWeather from './components/CurrentWeather';
 import DailyForecast from './components/DailyForecast';
 import HourlyForecast from './components/HourlyForecast';
-import WeatherAlerts from './components/WeatherAlerts';
+import WeatherAlert from './components/WeatherAlert';
 import LoadingSpinner from './components/LoadingSpinner';
 import ErrorMessage from './components/ErrorMessage';
 
@@ -74,7 +74,7 @@ function App() {
         };
       }
     }
-  }, [currentWeather]);
+  }, [currentWeather, backgroundImage]);
 
   useEffect(() => {
     if (position && !selectedLocation.lat && !selectedLocation.lon) {
@@ -169,6 +169,12 @@ function App() {
           ) : (
             currentWeather && oneCallData && (
               <>
+                {oneCallData.alerts && oneCallData.alerts.length > 0 && (
+                  <WeatherAlert 
+                    alerts={oneCallData.alerts} 
+                    timezone_offset={oneCallData.timezone_offset} 
+                  />
+                )}
                 <CurrentWeather 
                   data={currentWeather} 
                   units={units} 
@@ -176,7 +182,6 @@ function App() {
                 />
                 <HourlyForecast data={oneCallData} units={units} />
                 <DailyForecast data={oneCallData} units={units} />
-                <WeatherAlerts data={oneCallData} />
               </>
             )
           )}
