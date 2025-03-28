@@ -14,7 +14,7 @@ const DailyForecast: React.FC<DailyForecastProps> = ({ data, units }) => {
   const dailyData = data.daily.slice(0, 7);
 
   return (
-    <div className="bg-white bg-opacity-90 rounded-xl p-6 shadow-lg w-full max-w-2xl mx-auto mt-6">
+    <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg w-full max-w-2xl mx-auto mt-6">
       <h2 className="text-xl font-bold mb-4">Dự báo 7 ngày tới</h2>
       
       <div className="space-y-4">

@@ -26,13 +26,13 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({ data, units }) => {
   if (!hourlyData.length) return null;
 
   return (
-    <div className="bg-white bg-opacity-90 rounded-xl p-6 shadow-lg w-full max-w-2xl mx-auto mt-6 relative">
+    <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg w-full max-w-2xl mx-auto mt-6 relative">
       <h2 className="text-xl font-bold mb-4">Dự báo theo giờ</h2>
       
       <div className="relative">
         <button 
           onClick={() => scroll('left')}
-          className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white bg-opacity-80 rounded-full p-1 shadow-md"
+          className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 backdrop-blur-sm rounded-full p-1 shadow-md hover:bg-white/100 transition-colors"
         >
           <ChevronLeft size={20} />
         </button>
@@ -55,9 +55,9 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({ data, units }) => {
           ))}
         </div>
         
-        <button 
+        <button
           onClick={() => scroll('right')}
-          className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white bg-opacity-80 rounded-full p-1 shadow-md"
+          className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 backdrop-blur-sm rounded-full p-1 shadow-md hover:bg-white/100 transition-colors"
         >
           <ChevronRight size={20} />
         </button>

@@ -14,7 +14,7 @@ const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data, units, onToggleUn
   const speedUnit = units === 'metric' ? 'm/s' : 'mph';
 
   return (
-    <div className="bg-white bg-opacity-90 rounded-xl p-6 shadow-lg w-full max-w-2xl mx-auto">
+    <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg w-full max-w-2xl mx-auto">
       <div className="flex justify-between items-start">
         <div>
           <h2 className="text-3xl font-bold">{data.name}, {data.sys.country}</h2>
