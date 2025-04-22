@@ -10,6 +10,7 @@ import HourlyForecast from './components/HourlyForecast';
 import WeatherAlert from './components/WeatherAlert';
 import LoadingSpinner from './components/LoadingSpinner';
 import ErrorMessage from './components/ErrorMessage';
+import ThemeToggle from './components/ThemeToggle';
 
 // Vị trí mặc định (Hà Nội)
 const DEFAULT_LOCATION = {
@@ -120,7 +121,7 @@ function App() {
         }}
       />
       <div 
-        className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/40"
+        className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/40 dark:from-black/90 dark:via-black/80 dark:to-black/70"
       />
       <div className="relative z-10 min-h-screen py-8 px-4">
         <header className="max-w-2xl mx-auto mb-8">
@@ -191,6 +192,7 @@ function App() {
           <p>Dữ liệu thời tiết được cung cấp bởi OpenWeatherMap</p>
         </footer>
       </div>
+      <ThemeToggle />
     </div>
   );
 }

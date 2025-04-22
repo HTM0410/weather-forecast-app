@@ -1,10 +1,26 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'dark-bg': '#1a1a1a',
+        'dark-card': '#2d2d2d',
+        'dark-text': '#e5e5e5',
+      },
+    },
   },
   plugins: [],
+  variants: {
+    extend: {
+      backgroundColor: ['dark', 'dark-hover', 'hover', 'active'],
+      textColor: ['dark', 'dark-hover'],
+      borderColor: ['dark'],
+      scale: ['hover', 'active'],
+    },
+  },
 }

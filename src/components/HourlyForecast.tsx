@@ -26,15 +26,15 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({ data, units }) => {
   if (!hourlyData.length) return null;
 
   return (
-    <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg w-full max-w-2xl mx-auto mt-6 relative">
-      <h2 className="text-xl font-bold mb-4">Dự báo theo giờ</h2>
+    <div className="bg-white/80 dark:bg-dark-card/80 backdrop-blur-sm rounded-xl p-6 shadow-lg w-full max-w-2xl mx-auto mt-6 relative">
+      <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-dark-text">Dự báo theo giờ</h2>
       
       <div className="relative">
         <button 
           onClick={() => scroll('left')}
-          className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 backdrop-blur-sm rounded-full p-1 shadow-md hover:bg-white/100 transition-colors"
+          className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 dark:bg-dark-card/90 backdrop-blur-sm rounded-full p-1 shadow-md hover:bg-white/100 dark:hover:bg-dark-card/100 transition-colors"
         >
-          <ChevronLeft size={20} />
+          <ChevronLeft size={20} className="text-gray-800 dark:text-dark-text" />
         </button>
         
         <div 
@@ -44,22 +44,22 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({ data, units }) => {
         >
           {hourlyData.map((hour) => (
             <div key={hour.dt} className="flex flex-col items-center min-w-[80px]">
-              <p className="text-sm font-medium">{formatDate(hour.dt, 'time')}</p>
+              <p className="text-sm font-medium text-gray-900 dark:text-dark-text">{formatDate(hour.dt, 'time')}</p>
               <img 
                 src={getWeatherIcon(hour.weather[0].icon)} 
                 alt={hour.weather[0].description}
                 className="w-12 h-12 my-1"
               />
-              <p className="font-bold">{Math.round(hour.temp)}{tempUnit}</p>
+              <p className="font-bold text-gray-900 dark:text-dark-text">{Math.round(hour.temp)}{tempUnit}</p>
             </div>
           ))}
         </div>
         
         <button
           onClick={() => scroll('right')}
-          className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 backdrop-blur-sm rounded-full p-1 shadow-md hover:bg-white/100 transition-colors"
+          className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/90 dark:bg-dark-card/90 backdrop-blur-sm rounded-full p-1 shadow-md hover:bg-white/100 dark:hover:bg-dark-card/100 transition-colors"
         >
-          <ChevronRight size={20} />
+          <ChevronRight size={20} className="text-gray-800 dark:text-dark-text" />
         </button>
       </div>
     </div>

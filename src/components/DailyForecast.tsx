@@ -14,8 +14,8 @@ const DailyForecast: React.FC<DailyForecastProps> = ({ data, units }) => {
   const dailyData = data.daily.slice(0, 7);
 
   return (
-    <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg w-full max-w-2xl mx-auto mt-6">
-      <h2 className="text-xl font-bold mb-4">Dự báo 7 ngày tới</h2>
+    <div className="bg-white/80 dark:bg-dark-card/80 backdrop-blur-sm rounded-xl p-6 shadow-lg w-full max-w-2xl mx-auto mt-6">
+      <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-dark-text">Dự báo 7 ngày tới</h2>
       
       <div className="space-y-4">
         {dailyData.map((day) => {
@@ -24,10 +24,10 @@ const DailyForecast: React.FC<DailyForecastProps> = ({ data, units }) => {
           const calendarDate = formatDate(day.dt, 'date', data.timezone_offset);
           
           return (
-            <div key={day.dt} className="flex items-center justify-between border-b border-gray-200 pb-3 last:border-0">
+            <div key={day.dt} className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-3 last:border-0">
               <div className="w-28">
-                <p className="font-medium">{dayOfWeek}</p>
-                <p className="text-sm text-gray-600">{calendarDate}</p>
+                <p className="font-medium text-gray-900 dark:text-dark-text">{dayOfWeek}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{calendarDate}</p>
               </div>
               
               <div className="flex items-center">
@@ -36,12 +36,12 @@ const DailyForecast: React.FC<DailyForecastProps> = ({ data, units }) => {
                   alt={day.weather[0].description}
                   className="w-12 h-12"
                 />
-                <span className="ml-2 text-sm capitalize">{day.weather[0].description}</span>
+                <span className="ml-2 text-sm capitalize text-gray-700 dark:text-gray-300">{day.weather[0].description}</span>
               </div>
               
               <div className="flex space-x-4">
-                <span className="font-bold">{Math.round(day.temp.max)}{tempUnit}</span>
-                <span className="text-gray-500">{Math.round(day.temp.min)}{tempUnit}</span>
+                <span className="font-bold text-gray-900 dark:text-dark-text">{Math.round(day.temp.max)}{tempUnit}</span>
+                <span className="text-gray-500 dark:text-gray-400">{Math.round(day.temp.min)}{tempUnit}</span>
               </div>
             </div>
           );
