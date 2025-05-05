@@ -180,7 +180,6 @@ function App() {
                 <WeatherAlerts 
                   data={oneCallData}
                   isMuted={alertsMuted}
-                  locationName={locationDisplayName}
                 />
                 <CurrentWeather 
                   data={currentWeather} 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sun, Moon, Bell, BellOff, AlertTriangle, X, Check } from 'lucide-react';
+import { Sun, Moon, Bell, BellOff, AlertTriangle, X } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { WeatherAlert } from '../types/weather';
 
@@ -36,7 +36,7 @@ const FloatingControls: React.FC<FloatingControlsProps> = ({
     const newState = !isAlertEnabled;
     onAlertToggle(newState);
     
-    // Hiển thị thông tin cảnh báo khi bật
+    // Hiển thị thông tin cảnh báo khi bật, bất kể có cảnh báo hay không
     if (newState) {
       setShowAlertInfo(true);
     }
@@ -65,13 +65,13 @@ const FloatingControls: React.FC<FloatingControlsProps> = ({
               </div>
             ) : (
               <div className="bg-green-100 dark:bg-green-900/30 p-2 rounded-full mr-3">
-                <Check className="text-green-500" size={18} />
+                <Bell className="text-green-500" size={18} />
               </div>
             )}
             
             <div className="flex-1">
               <h3 className="font-medium text-gray-900 dark:text-white mb-2">
-                {hasAlerts ? 'Cảnh báo thời tiết' : 'Không có cảnh báo thời tiết'}
+                {hasAlerts ? 'Cảnh báo thời tiết' : 'Thông báo thời tiết'}
               </h3>
               
               {hasAlerts ? (
@@ -80,7 +80,7 @@ const FloatingControls: React.FC<FloatingControlsProps> = ({
                 </p>
               ) : (
                 <p className="text-sm text-gray-700 dark:text-gray-300">
-                  Khu vực {locationName || 'của bạn'} hiện đang an toàn.
+                  Khu vực {locationName || 'của bạn'} hiện không có cảnh báo thời tiết.
                 </p>
               )}
               

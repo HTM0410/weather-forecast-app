@@ -4,7 +4,6 @@ import { OneCallData, WeatherAlert } from '../types/weather';
 import { formatDate } from '../services/weatherService';
 import AlertSettings from './AlertSettings';
 import AlertToast from './AlertToast';
-import NoAlertNotification from './NoAlertNotification';
 
 // Các key cho localStorage
 const ALERTS_STATE_KEY = 'weather_alerts_state';
@@ -67,19 +66,16 @@ interface WeatherAlertsProps {
   data: OneCallData;
   // Thêm prop mới để nhận trạng thái cảnh báo từ FloatingControls
   isMuted?: boolean;
-  locationName?: string;
 }
 
 const WeatherAlerts: React.FC<WeatherAlertsProps> = ({ 
   data, 
-  isMuted = false,
-  locationName
+  isMuted = false
 }) => {
   const [dismissedAlerts, setDismissedAlerts] = useState<number[]>([]);
   const [expandedAlerts, setExpandedAlerts] = useState<number[]>([]);
   const [alertsMuted, setAlertsMuted] = useState(isMuted);
   const [toastAlert, setToastAlert] = useState<WeatherAlert | null>(null);
-  const [showNoAlertNotification, setShowNoAlertNotification] = useState(false);
   
   // Cài đặt cảnh báo
   const [alertSettings, setAlertSettings] = useState<AlertSettingsData>({
@@ -160,12 +156,6 @@ const WeatherAlerts: React.FC<WeatherAlertsProps> = ({
       if (alertToShow && !alertsMuted) {
         setToastAlert(alertToShow);
       }
-      
-      // Có cảnh báo, không hiển thị thông báo "không có cảnh báo"
-      setShowNoAlertNotification(false);
-    } else {
-      // Không có cảnh báo, hiển thị thông báo "không có cảnh báo"
-      setShowNoAlertNotification(true);
     }
   }, [data.alerts, alertsMuted, alertSettings]);
   
@@ -215,9 +205,6 @@ const WeatherAlerts: React.FC<WeatherAlertsProps> = ({
   if (activeAlerts.length === 0 && !alertsMuted && data.alerts && data.alerts.length > 0) {
     return null;
   }
-
-  // Xác định tên vị trí thực tế để hiển thị
-  const actualLocationName = locationName || data.timezone?.split('/').pop() || 'Vị trí hiện tại';
 
   return (
     <>
@@ -337,14 +324,6 @@ const WeatherAlerts: React.FC<WeatherAlertsProps> = ({
         <AlertToast 
           alert={toastAlert} 
           onClose={() => setToastAlert(null)} 
-        />
-      )}
-      
-      {/* Thông báo không có cảnh báo */}
-      {!data.alerts?.length && showNoAlertNotification && alertSettings.notificationsEnabled && (
-        <NoAlertNotification 
-          locationName={actualLocationName}
-          onClose={() => setShowNoAlertNotification(false)}
         />
       )}
     </>
