@@ -28,34 +28,52 @@ const AlertToast: React.FC<AlertToastProps> = ({
   }, [onClose, autoCloseTime]);
   
   return (
-    <div 
-      className={`fixed bottom-6 right-6 bg-white dark:bg-dark-card shadow-lg rounded-lg p-4 w-80 flex items-start transition-all duration-300 ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-      }`}
-    >
-      <AlertTriangle className="text-red-500 flex-shrink-0 mr-3" size={20} />
-      
-      <div className="flex-1">
-        <div className="font-medium text-gray-900 dark:text-dark-text mb-1">{alert.event}</div>
-        <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{alert.description}</div>
-        <button 
-          className="text-sm text-blue-500 hover:underline mt-1"
-          onClick={(e) => {
-            e.preventDefault();
-            document.getElementById('weather-alerts')?.scrollIntoView({ behavior: 'smooth' });
-            onClose();
-          }}
-        >
-          Xem chi tiết
-        </button>
-      </div>
-      
-      <button 
-        onClick={onClose}
-        className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 ml-2"
+    <div className="fixed bottom-6 right-6 z-50">
+      <div 
+        className={`bg-white/90 dark:bg-dark-card/90 backdrop-blur-sm shadow-lg rounded-lg p-4 w-80 transition-all duration-300 transform animate-fade-in-up ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}
       >
-        <X size={16} />
-      </button>
+        <button 
+          onClick={onClose}
+          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+        >
+          <X size={16} />
+        </button>
+        
+        <div className="flex items-start">
+          <div className="bg-red-100 dark:bg-red-900/30 p-2 rounded-full mr-3">
+            <AlertTriangle className="text-red-500" size={18} />
+          </div>
+          
+          <div className="flex-1">
+            <h3 className="font-medium text-gray-900 dark:text-white mb-2">
+              Cảnh báo thời tiết mới
+            </h3>
+            <p className="text-sm text-gray-700 dark:text-gray-300 font-medium">
+              {alert.event}
+            </p>
+            <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2 mt-1">
+              {alert.description}
+            </p>
+            <button 
+              className="text-xs text-blue-500 hover:underline mt-2 flex items-center"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('weather-alerts')?.scrollIntoView({ behavior: 'smooth' });
+                onClose();
+              }}
+            >
+              Xem chi tiết
+            </button>
+          </div>
+        </div>
+        
+        {/* Progress bar */}
+        <div className="w-full bg-gray-200 dark:bg-gray-700 h-1 mt-3 rounded-full overflow-hidden">
+          <div className="bg-blue-500 h-1 rounded-full animate-progress"></div>
+        </div>
+      </div>
     </div>
   );
 };

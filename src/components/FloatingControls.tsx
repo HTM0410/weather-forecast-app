@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sun, Moon, Bell, BellOff, AlertTriangle, X } from 'lucide-react';
+import { Sun, Moon, Bell, BellOff, AlertTriangle, X, Check } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { WeatherAlert } from '../types/weather';
 
@@ -58,30 +58,39 @@ const FloatingControls: React.FC<FloatingControlsProps> = ({
             <X size={16} />
           </button>
           
-          <h3 className="font-medium text-gray-900 dark:text-white mb-2 flex items-center">
-            <AlertTriangle className={`${hasAlerts ? "text-red-500" : "text-green-500"} mr-2`} size={16} />
-            Trạng thái cảnh báo
-          </h3>
-          
-          {hasAlerts ? (
-            <div className="text-sm">
-              <p className="text-red-600 dark:text-red-400 font-medium">
-                Có {alerts.length} cảnh báo thời tiết cho khu vực {locationName}
-              </p>
-              <p className="text-gray-700 dark:text-gray-300 mt-1">
-                Xem chi tiết ở phần đầu trang
+          <div className="flex items-start">
+            {hasAlerts ? (
+              <div className="bg-red-100 dark:bg-red-900/30 p-2 rounded-full mr-3">
+                <AlertTriangle className="text-red-500" size={18} />
+              </div>
+            ) : (
+              <div className="bg-green-100 dark:bg-green-900/30 p-2 rounded-full mr-3">
+                <Check className="text-green-500" size={18} />
+              </div>
+            )}
+            
+            <div className="flex-1">
+              <h3 className="font-medium text-gray-900 dark:text-white mb-2">
+                {hasAlerts ? 'Cảnh báo thời tiết' : 'Không có cảnh báo thời tiết'}
+              </h3>
+              
+              {hasAlerts ? (
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  Có {alerts.length} cảnh báo thời tiết cho khu vực {locationName || 'của bạn'}
+                </p>
+              ) : (
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  Khu vực {locationName || 'của bạn'} hiện đang an toàn.
+                </p>
+              )}
+              
+              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                {isAlertEnabled 
+                  ? 'Bạn sẽ nhận được thông báo nếu có cảnh báo mới.'
+                  : 'Thông báo cảnh báo đã bị tắt.'}
               </p>
             </div>
-          ) : (
-            <div className="text-sm">
-              <p className="text-green-600 dark:text-green-400 font-medium">
-                Không có cảnh báo thời tiết
-              </p>
-              <p className="text-gray-700 dark:text-gray-300 mt-1">
-                Khu vực {locationName || 'của bạn'} đang an toàn
-              </p>
-            </div>
-          )}
+          </div>
           
           <div className="w-full bg-gray-200 dark:bg-gray-700 h-1 mt-3 rounded-full overflow-hidden">
             <div className="bg-blue-500 h-1 rounded-full animate-progress"></div>
