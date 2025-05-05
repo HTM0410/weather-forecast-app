@@ -7,10 +7,10 @@ import SearchBar from './components/SearchBar';
 import CurrentWeather from './components/CurrentWeather';
 import DailyForecast from './components/DailyForecast';
 import HourlyForecast from './components/HourlyForecast';
-import WeatherAlert from './components/WeatherAlert';
+import WeatherAlerts from './components/WeatherAlerts';
 import LoadingSpinner from './components/LoadingSpinner';
 import ErrorMessage from './components/ErrorMessage';
-import ThemeToggle from './components/ThemeToggle';
+import FloatingControls from './components/FloatingControls';
 
 // Vị trí mặc định (Hà Nội)
 const DEFAULT_LOCATION = {
@@ -32,6 +32,7 @@ function App() {
   });
   const [backgroundImage, setBackgroundImage] = useState<string>('https://images.unsplash.com/photo-1534088568595-a066f410bcda?q=80&w=1951&auto=format&fit=crop');
   const [isImageLoading, setIsImageLoading] = useState(false);
+  const [alertsMuted, setAlertsMuted] = useState(false);
 
   const { loading: geoLoading, error: geoError, position, permissionDenied } = useGeolocation();
   
@@ -105,6 +106,10 @@ function App() {
     }
   };
 
+  const handleAlertToggle = (isEnabled: boolean) => {
+    setAlertsMuted(!isEnabled);
+  };
+
   const loading = geoLoading || weatherLoading;
   const error = weatherError || (geoError && !permissionDenied ? geoError : null);
 
@@ -170,12 +175,10 @@ function App() {
           ) : (
             currentWeather && oneCallData && (
               <>
-                {oneCallData.alerts && oneCallData.alerts.length > 0 && (
-                  <WeatherAlert 
-                    alerts={oneCallData.alerts} 
-                    timezone_offset={oneCallData.timezone_offset} 
-                  />
-                )}
+                <WeatherAlerts 
+                  data={oneCallData}
+                  isMuted={alertsMuted}
+                />
                 <CurrentWeather 
                   data={currentWeather} 
                   units={units} 
@@ -192,7 +195,15 @@ function App() {
           <p>Dữ liệu thời tiết được cung cấp bởi OpenWeatherMap</p>
         </footer>
       </div>
-      <ThemeToggle />
+      
+      {currentWeather && oneCallData && (
+        <FloatingControls 
+          onAlertToggle={handleAlertToggle}
+          isAlertEnabled={!alertsMuted}
+          alerts={oneCallData.alerts}
+          locationName={selectedLocation.name || currentWeather.name}
+        />
+      )}
     </div>
   );
 }

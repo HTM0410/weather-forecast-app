@@ -223,10 +223,10 @@ const WEATHER_BACKGROUNDS = {
   atmosphere: 'https://images.unsplash.com/photo-1485236715568-ddc5ee6ca227?q=80&w=1933&auto=format&fit=crop',
   
   // Clear day
-  clearDay: 'https://images.unsplash.com/photo-1598717873846-a3cb339601a2?q=80&w=1974&auto=format&fit=crop',
+  clearDay: 'https://th.bing.com/th/id/R.e1ada39e08176dd4c630ee2bd219794f?rik=Xw%2fDYwfg%2bjYa3A&pid=ImgRaw&r=0',
   
   // Clear night
-  clearNight: 'https://images.unsplash.com/photo-1532978379173-523e16f371f4?q=80&w=1974&auto=format&fit=crop',
+  clearNight: 'https://sdmntpreastus2.oaiusercontent.com/files/00000000-85d8-61f6-9436-cbb6902f8506/raw?se=2025-04-24T17%3A24%3A55Z&sp=r&sv=2024-08-04&sr=b&scid=4c8e1e63-d772-51f1-a88a-caebfe0aed4f&skoid=2f36945c-3adc-4614-ac2b-eced8f672c58&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-04-24T04%3A18%3A03Z&ske=2025-04-25T04%3A18%3A03Z&sks=b&skv=2024-08-04&sig=rx2SVEDWE9zQnYZ9p17cUtRUZOqU7SJ27SgNsrHwRns%3D',
   
   // Clouds day
   cloudsDay: 'https://images.unsplash.com/photo-1525920980995-f8a382bf42c5?q=80&w=1974&auto=format&fit=crop',
