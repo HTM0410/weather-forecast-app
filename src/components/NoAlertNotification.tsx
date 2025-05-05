@@ -54,9 +54,9 @@ const NoAlertNotification: React.FC<NoAlertNotificationProps> = ({
   if (!isVisible) return null;
   
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end space-y-3">
       <div 
-        className={`bg-white/90 dark:bg-dark-card/90 backdrop-blur-sm shadow-lg rounded-lg p-4 max-w-md transition-all duration-300 transform animate-fade-in-up ${
+        className={`bg-white/90 dark:bg-dark-card/90 backdrop-blur-sm rounded-lg shadow-lg p-4 mb-2 w-72 transition-all duration-300 transform animate-fade-in-up ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
@@ -89,8 +89,11 @@ const NoAlertNotification: React.FC<NoAlertNotificationProps> = ({
           <div className="bg-blue-500 h-1 rounded-full animate-progress"></div>
         </div>
       </div>
+      
+      {/* Placeholder cho không gian dành cho các nút */}
+      <div className="w-full h-14"></div>
     </div>
   );
 };
 
-export default NoAlertNotification; 
+export default NoAlertNotification;

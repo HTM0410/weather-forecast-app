@@ -113,6 +113,8 @@ function App() {
   const loading = geoLoading || weatherLoading;
   const error = weatherError || (geoError && !permissionDenied ? geoError : null);
 
+  const locationDisplayName = selectedLocation.name || (currentWeather ? currentWeather.name : 'Vị trí hiện tại');
+
   console.log('Current background image:', backgroundImage);
 
   return (
@@ -178,6 +180,7 @@ function App() {
                 <WeatherAlerts 
                   data={oneCallData}
                   isMuted={alertsMuted}
+                  locationName={locationDisplayName}
                 />
                 <CurrentWeather 
                   data={currentWeather} 
@@ -201,7 +204,7 @@ function App() {
           onAlertToggle={handleAlertToggle}
           isAlertEnabled={!alertsMuted}
           alerts={oneCallData.alerts}
-          locationName={selectedLocation.name || currentWeather.name}
+          locationName={locationDisplayName}
         />
       )}
     </div>

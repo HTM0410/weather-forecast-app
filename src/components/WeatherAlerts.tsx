@@ -1,128 +1,131 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { AlertTriangle, X, ChevronDown, ChevronUp, Bell, BellOff } from 'lucide-react';
+import { AlertTriangle, Bell, BellOff, ChevronDown, ChevronUp, X } from 'lucide-react';
 import { OneCallData, WeatherAlert } from '../types/weather';
 import { formatDate } from '../services/weatherService';
-import AlertToast from './AlertToast';
 import AlertSettings from './AlertSettings';
+import AlertToast from './AlertToast';
 import NoAlertNotification from './NoAlertNotification';
 
-// Định nghĩa các loại cảnh báo và mức độ nghiêm trọng
+// Các key cho localStorage
+const ALERTS_STATE_KEY = 'weather_alerts_state';
+
+// Định nghĩa interface cho cài đặt cảnh báo
+interface AlertSettingsData {
+  notificationsEnabled: boolean;
+  highSeverityOnly: boolean;
+  autoExpandAlerts: boolean;
+}
+
+// Phân loại cảnh báo theo mức độ nghiêm trọng
 const getAlertSeverity = (alert: WeatherAlert): 'high' | 'medium' | 'low' => {
-  const highSeverityKeywords = ['warning', 'tornado', 'hurricane', 'flood', 'severe', 'excessive'];
-  const mediumSeverityKeywords = ['advisory', 'watch', 'storm'];
-  
   const event = alert.event.toLowerCase();
+  const description = alert.description.toLowerCase();
   
-  if (highSeverityKeywords.some(keyword => event.includes(keyword))) {
+  // Các từ khóa nguy hiểm cao
+  const highKeywords = ['emergency', 'warning', 'severe', 'extreme', 'danger', 'hurricane', 'tornado', 'tsunami'];
+  
+  // Các từ khóa nguy hiểm trung bình
+  const mediumKeywords = ['watch', 'advisory', 'moderate', 'caution'];
+  
+  if (highKeywords.some(keyword => event.includes(keyword) || description.includes(keyword))) {
     return 'high';
-  } else if (mediumSeverityKeywords.some(keyword => event.includes(keyword))) {
+  } else if (mediumKeywords.some(keyword => event.includes(keyword) || description.includes(keyword))) {
     return 'medium';
   } else {
     return 'low';
   }
 };
 
-// Lấy màu sắc dựa trên mức độ nghiêm trọng
+// Lấy màu sắc phù hợp với mức độ cảnh báo
 const getSeverityColor = (severity: 'high' | 'medium' | 'low') => {
   switch (severity) {
     case 'high':
       return {
-        border: 'border-red-500',
-        bg: 'bg-red-50 dark:bg-red-900/20',
-        text: 'text-red-700 dark:text-red-400',
-        icon: 'text-red-500'
+        border: 'border-red-500 dark:border-red-500/70',
+        bg: 'bg-red-100 dark:bg-red-900/30',
+        text: 'text-red-800 dark:text-red-300',
+        icon: 'text-red-600'
       };
     case 'medium':
       return {
-        border: 'border-orange-400',
-        bg: 'bg-orange-50 dark:bg-orange-900/20',
-        text: 'text-orange-700 dark:text-orange-400',
-        icon: 'text-orange-500'
+        border: 'border-orange-500 dark:border-orange-500/70',
+        bg: 'bg-orange-100 dark:bg-orange-900/30',
+        text: 'text-orange-800 dark:text-orange-300',
+        icon: 'text-orange-600'
       };
-    case 'low':
+    default:
       return {
-        border: 'border-yellow-400',
-        bg: 'bg-yellow-50 dark:bg-yellow-900/20',
-        text: 'text-yellow-700 dark:text-yellow-400',
-        icon: 'text-yellow-500'
+        border: 'border-yellow-500 dark:border-yellow-500/70',
+        bg: 'bg-yellow-100 dark:bg-yellow-900/30',
+        text: 'text-yellow-800 dark:text-yellow-300',
+        icon: 'text-yellow-600'
       };
   }
 };
-
-// Khóa để lưu trạng thái vào localStorage
-const ALERTS_STATE_KEY = 'weather_alerts_state';
 
 interface WeatherAlertsProps {
   data: OneCallData;
   // Thêm prop mới để nhận trạng thái cảnh báo từ FloatingControls
   isMuted?: boolean;
+  locationName?: string;
 }
 
-const WeatherAlerts: React.FC<WeatherAlertsProps> = ({ data, isMuted = false }) => {
+const WeatherAlerts: React.FC<WeatherAlertsProps> = ({ 
+  data, 
+  isMuted = false,
+  locationName
+}) => {
+  const [dismissedAlerts, setDismissedAlerts] = useState<number[]>([]);
   const [expandedAlerts, setExpandedAlerts] = useState<number[]>([]);
-  const [dismissedAlerts, setDismissedAlerts] = useState<number[]>(() => {
-    // Lấy trạng thái đã lưu từ localStorage
+  const [alertsMuted, setAlertsMuted] = useState(isMuted);
+  const [toastAlert, setToastAlert] = useState<WeatherAlert | null>(null);
+  const [showNoAlertNotification, setShowNoAlertNotification] = useState(false);
+  
+  // Cài đặt cảnh báo
+  const [alertSettings, setAlertSettings] = useState<AlertSettingsData>({
+    notificationsEnabled: true,
+    highSeverityOnly: false,
+    autoExpandAlerts: true
+  });
+  
+  // Đồng bộ trạng thái cảnh báo với prop từ FloatingControls
+  useEffect(() => {
+    setAlertsMuted(isMuted);
+  }, [isMuted]);
+  
+  // Quản lý thay đổi cài đặt từ component con
+  const handleSettingsChange = useCallback((newSettings: AlertSettingsData) => {
+    setAlertSettings(newSettings);
+  }, []);
+  
+  // Đọc danh sách cảnh báo đã ẩn từ localStorage
+  useEffect(() => {
     try {
       const savedState = localStorage.getItem(ALERTS_STATE_KEY);
       if (savedState) {
-        const { dismissedEvents } = JSON.parse(savedState);
+        const { dismissedEvents, muted } = JSON.parse(savedState);
         
-        // Nếu có data.alerts, lọc các sự kiện đã bỏ qua
         if (data.alerts) {
-          // Trả về các chỉ số của các cảnh báo khớp với sự kiện đã bỏ qua
-          return data.alerts
+          // Khôi phục chỉ số dựa trên tên sự kiện
+          const indexes = data.alerts
             .map((alert, index) => ({ alert, index }))
-            .filter(item => dismissedEvents.includes(item.alert.event))
-            .map(item => item.index);
+            .filter(({ alert }) => dismissedEvents.includes(alert.event))
+            .map(({ index }) => index);
+          
+          setDismissedAlerts(indexes);
+        }
+        
+        // Nếu trạng thái được đọc từ localStorage mà chưa được truyền qua props
+        if (muted !== undefined && isMuted === false) {
+          setAlertsMuted(muted);
         }
       }
     } catch (error) {
       console.error('Lỗi khi đọc trạng thái cảnh báo:', error);
     }
-    
-    return [];
-  });
+  }, [data.alerts, isMuted]);
   
-  // Thay đổi cách sử dụng alertsMuted để sử dụng giá trị từ prop
-  const [localAlertsMuted, setLocalAlertsMuted] = useState<boolean>(() => {
-    try {
-      const savedState = localStorage.getItem(ALERTS_STATE_KEY);
-      if (savedState) {
-        const { muted } = JSON.parse(savedState);
-        return muted || false;
-      }
-    } catch (error) {
-      console.error('Lỗi khi đọc trạng thái tắt cảnh báo:', error);
-    }
-    return false;
-  });
-  
-  // Sử dụng giá trị isMuted từ prop, nếu được cung cấp
-  const alertsMuted = isMuted !== undefined ? isMuted : localAlertsMuted;
-  
-  const [toastAlert, setToastAlert] = useState<WeatherAlert | null>(null);
-  const [showNoAlertNotification, setShowNoAlertNotification] = useState<boolean>(false);
-  const [alertSettings, setAlertSettings] = useState({
-    notificationsEnabled: true,
-    highSeverityOnly: true,
-    autoExpandAlerts: true
-  });
-  
-  // Xử lý thay đổi cài đặt cảnh báo
-  const handleSettingsChange = useCallback((newSettings: {
-    notificationsEnabled: boolean;
-    highSeverityOnly: boolean;
-    autoExpandAlerts: boolean;
-  }) => {
-    setAlertSettings(newSettings);
-    
-    // Nếu cài đặt thông báo bị tắt, tắt luôn thông báo đang hiển thị
-    if (!newSettings.notificationsEnabled) {
-      setToastAlert(null);
-    }
-  }, []);
-  
-  // Lưu trạng thái vào localStorage khi thay đổi
+  // Lưu danh sách cảnh báo đã ẩn vào localStorage
   useEffect(() => {
     if (data.alerts) {
       // Lưu các tên sự kiện đã bỏ qua thay vì chỉ số
@@ -195,8 +198,8 @@ const WeatherAlerts: React.FC<WeatherAlertsProps> = ({ data, isMuted = false }) 
   };
   
   const toggleAllAlerts = () => {
-    setLocalAlertsMuted(!localAlertsMuted);
-    if (!localAlertsMuted && data.alerts) {
+    setAlertsMuted(!alertsMuted);
+    if (!alertsMuted && data.alerts) {
       // Tắt tất cả cảnh báo
       setDismissedAlerts(data.alerts.map((_, index) => index));
     } else {
@@ -212,6 +215,9 @@ const WeatherAlerts: React.FC<WeatherAlertsProps> = ({ data, isMuted = false }) 
   if (activeAlerts.length === 0 && !alertsMuted && data.alerts && data.alerts.length > 0) {
     return null;
   }
+
+  // Xác định tên vị trí thực tế để hiển thị
+  const actualLocationName = locationName || data.timezone?.split('/').pop() || 'Vị trí hiện tại';
 
   return (
     <>
@@ -337,7 +343,7 @@ const WeatherAlerts: React.FC<WeatherAlertsProps> = ({ data, isMuted = false }) 
       {/* Thông báo không có cảnh báo */}
       {!data.alerts?.length && showNoAlertNotification && alertSettings.notificationsEnabled && (
         <NoAlertNotification 
-          locationName={data.timezone?.split('/').pop() || ''}
+          locationName={actualLocationName}
           onClose={() => setShowNoAlertNotification(false)}
         />
       )}
